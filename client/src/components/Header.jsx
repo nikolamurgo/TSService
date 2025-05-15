@@ -1,11 +1,18 @@
+import '../styles/HeaderStyles.css'
+
 function Header() {
   return (
-    <div style={{
-      background: '#f4f4f4',
-      padding: '1rem',
-      borderBottom: '1px solid #ccc'
-    }}>
-      <h1>Admin Dashboard</h1>
+    <div className="header-container">
+      <nav className="navbar bg-body-tertiary">
+        <div className="container-fluid">
+          <a className="navbar-brand " href='#'>Dashboard</a>
+          <form className="d-flex" role="search">
+            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+            <button className="btn btn-outline-success" type="submit">Search</button>
+          </form>
+          <button className="btn btn-dark " type="submit">SignIn</button>
+        </div>
+      </nav>
     </div>
   )
 }
