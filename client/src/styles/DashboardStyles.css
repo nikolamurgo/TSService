@@ -1,0 +1,11 @@
+.dash-container {
+    display: flex;
+}
+
+.right-side {
+    flex: 1;
+}
+
+.mainfield{
+    padding: 1rem;
+}
