@@ -1,0 +1,13 @@
+.record-container{
+    width: 90%;
+    max-width: 60%;
+}
+
+.cell {
+    width:10%;
+}
+
+th, td {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
