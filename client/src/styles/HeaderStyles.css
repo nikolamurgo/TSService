@@ -1,9 +1,10 @@
 .header-container {
-    background: #f4f4f4;
     padding: 1rem;
-    border-bottom: 1px solid #000000;
+    border-bottom: 1px solid #b2b2b2;
+    background-color: #F8F9FA;
 }
 
 .navbuttons{
     margin-left: 1rem;
 }
+
