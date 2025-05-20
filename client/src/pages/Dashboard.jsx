@@ -1,13 +1,14 @@
 import Sidebar from '../components/Sidebar.jsx'
 import Header from '../components/Header.jsx'
+import '../styles/DashboardStyles.css'
 
 function Dashboard() {
     return (
-        <div style={{ display: 'flex' }}>
+        <div className='dash-container'>
             <Sidebar />
-            <div style={{ flex: 1 }}>
+            <div className='right-side'>
                 <Header />
-                <main style={{ padding: '1rem' }}>
+                <main className='mainfield'>
                     <h2>Welcome to the Dashboard</h2>
                 </main>
             </div>
