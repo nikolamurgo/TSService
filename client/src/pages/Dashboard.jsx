@@ -6,7 +6,6 @@ import '../styles/DashboardStyles.css'
 function Dashboard() {
     return (
         <div className='dash-container'>
-            <Sidebar />
             <div className='right-side'>
                 <Header />
                 <main className='mainfield'>
