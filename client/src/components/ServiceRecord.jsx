@@ -4,6 +4,7 @@ function ServiceRecord() {
     return (
         <div className='d-flex justify-content-center mt-5'>
             <div className='record-container'>
+                <h3>List of Repairs</h3>
                 <table className="table table-hover table-bordered table-responsive">
                     <thead className='table-dark'>
                         <tr>
