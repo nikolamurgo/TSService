@@ -81,4 +81,43 @@ router.post('/add-record', (req, res) => {
     })
 })
 
+// GET all records
+router.get('/', async (req, res) => {
+    try {
+        const [rows] = await db.promise().query(
+            `
+                SELECT
+                Customer.customer_id,
+                Customer.first_name,
+                Customer.last_name,
+                Customer.email,
+                Customer.phone_number,
+                Customer.address,
+                Device.device_id,
+                Device.model,
+                Device.imei,
+                Problem.description AS problem_description,
+                Problem.severity_level,
+                Repair.repair_id,
+                Repair.status,
+                Repair.repair_notes,
+                Repair.repair_cost,
+                Repair.start_date,
+                Repair.end_date,
+                u1.username AS diagnosed_by,
+                u2.username AS assigned_to
+                FROM Repair
+                JOIN Problem ON Repair.problem_id = Problem.problem_id
+                JOIN Device ON Problem.device_id = Device.device_id
+                JOIN Customer ON Device.customer_id = Customer.customer_id
+                LEFT JOIN User u1 ON Problem.diagnosed_by = u1.user_id
+                LEFT JOIN User u2 ON Repair.assigned_to = u2.user_id
+            `
+        )
+        res.json(rows)
+    } catch (err) {
+        res.status(500).json({ message: 'error fetching records' })
+    }
+})
+
 module.exports = router;
