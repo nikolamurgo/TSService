@@ -80,7 +80,6 @@ router.post('/add-record', (req, res) => {
         })
     })
 })
-
 // GET all records
 router.get('/', async (req, res) => {
     try {
