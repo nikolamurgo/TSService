@@ -27,8 +27,10 @@ function AddRecordForm() {
         }))
     }
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
         try {
             await axios.post('http://88.200.63.148:6060/api/records/add-record', formData);
             alert('Record added!');

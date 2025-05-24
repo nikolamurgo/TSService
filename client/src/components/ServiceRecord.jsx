@@ -38,10 +38,10 @@ function ServiceRecord() {
                     <tbody>
                         {records.map((record) => (
                             <tr key={record.repair_id}>
-                                <th scope='row'>{record.repair_id}</th>
+                                <th scope='row'>TS2025-{record.repair_id}</th>
                                 <td>{record.first_name} {record.last_name}</td>
                                 <td>{record.model}</td>
-                                <td>{record.start_date}</td>
+                                <td>{record.start_date.split('T')[0]}</td>
                                 <td>{record.status}</td>
                                 <td onClick={() => navigate(`/records/${record.repair_id}`)}>
                                     <AiFillEdit />
