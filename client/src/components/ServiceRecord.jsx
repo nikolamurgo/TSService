@@ -1,6 +1,8 @@
 import '../styles/RecordStyles.css'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
+import { AiFillEdit } from "react-icons/ai";
 
 function ServiceRecord() {
 
@@ -15,6 +17,9 @@ function ServiceRecord() {
         })
     },[])
 
+    const navigate = useNavigate();
+
+
     return (
         <div className='d-flex justify-content-center mt-5'>
             <div className='record-container'>
@@ -27,6 +32,7 @@ function ServiceRecord() {
                             <th scope="col">Phone Model</th>
                             <th scope="col">Date</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,6 +43,9 @@ function ServiceRecord() {
                                 <td>{record.model}</td>
                                 <td>{record.start_date}</td>
                                 <td>{record.status}</td>
+                                <td onClick={() => navigate(`/records/${record.repair_id}`)}>
+                                    <AiFillEdit />
+                                </td>                             
                             </tr>
                         ))}
                     </tbody>
