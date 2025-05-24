@@ -118,5 +118,33 @@ router.get('/', async (req, res) => {
         res.status(500).json({ message: 'error fetching records' })
     }
 })
+// GET record by repair_id
+router.get('/:id', async (req, res) => {
+    const recordId = req.params.id
+
+    try {
+        const [rows] = await db.promise().query(
+            `
+            SELECT Repair.*, Problem.description, Problem.severity_level,
+            Customer.first_name, Customer.last_name,
+            Device.model, Device.imei
+            FROM Repair
+            JOIN Problem ON Repair.problem_id = Problem.problem_id
+            JOIN Device ON Problem.device_id = Device.device_id
+            JOIN Customer ON Device.customer_id = Customer.customer_id
+            WHERE Repair.repair_id = ?
+            `, [recordId]
+        )
+
+        if (rows.length === 0){
+            return res.status(404).json({message: 'record not found'})
+        }
+
+        res.json(rows[0])
+    } catch(err){
+        console.error("error fetching record details",err)
+        res.status(500).json({error: 'failed to fetch record details'})
+    }
+})
 
 module.exports = router;
