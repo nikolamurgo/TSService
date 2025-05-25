@@ -1,0 +1,40 @@
+.login-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logincard {
+  width: 350px;
+  background: white;
+  border-radius: 1px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
+  padding: 2rem;
+}
+
+.logincard .form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 8px #667eea;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.logincard .btn-primary {
+  background-color: #667eea;
+  border: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.logincard .btn-primary:hover {
+  background-color: #5563c1;
+  cursor: pointer;
+}
+
+.logincard label {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  display: block;
+  color: #333;
+}

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import LoginStyles from '../styles/LoginStyles.css'
 
 function Login({ setAuth, setRole }) {  // props setAuth and setRole
 
@@ -27,7 +28,7 @@ function Login({ setAuth, setRole }) {  // props setAuth and setRole
 
         navigate('/'); // after login successfull go to the dashboard
 
-        alert('Login successful!')
+        // alert('Login successful!')
       } else {
         alert('Invalid credentials!!!')
       }
@@ -38,20 +39,39 @@ function Login({ setAuth, setRole }) {  // props setAuth and setRole
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label>Username</label>
-          <input type="text" className="form-control" name="username" value={formData.username} onChange={handleChange} required />
-        </div>
-        <div className="mb-3">
-          <label>Password</label>
-          <input type="password" className="form-control" name="password_hash" value={formData.password_hash} onChange={handleChange} required />
-        </div>
-        <button type='submit' className="btn btn-primary">Login</button>
-      </form>
+    <div className="login-page">
+      <div className="logincard card p-4 shadow-sm">
+        <h2 className="mb-4 text-center">Login</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3 inputs">
+            <label>Username</label>
+            <input
+              type="text"
+              className="form-control"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3 inputs">
+            <label>Password</label>
+            <input
+              type="password"
+              className="form-control"
+              name="password_hash"
+              value={formData.password_hash}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button type="submit" className="btn btn-primary w-100">
+            Login
+          </button>
+        </form>
+      </div>
     </div>
+
   );
 }
 
