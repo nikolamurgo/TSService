@@ -4,11 +4,11 @@ const db = require('../db/connection')
 
 
 router.post('/login', async (req,res) => {
-    const {username, password_hash} = req.body
+    const {username, password} = req.body
 
     try{
         const [rows] = await db.promise().query(
-            'SELECT * FROM User WHERE username = ? AND password_hash = ?', [username, password_hash]
+            'SELECT * FROM User WHERE username = ? AND password = ?', [username, password]
         )
 
         if(rows.length === 0){

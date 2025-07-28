@@ -23,6 +23,8 @@ function RecordDetails() {
                 <li className="list-group-item"><strong>Phone Model:</strong> {record.model}</li>
                 <li className="list-group-item"><strong>IMEI:</strong> {record.imei}</li>
                 <li className="list-group-item"><strong>Problem:</strong> {record.description}</li>
+                <li className="list-group-item"><strong>Diagnosed By:</strong> {record.diagnosed_by}</li>
+                <li className="list-group-item"><strong>Assigned To:</strong> {record.username}</li>
                 <li className="list-group-item"><strong>Severity:</strong> {record.severity_level}</li>
                 <li className="list-group-item"><strong>Status:</strong> {record.status}</li>
                 <li className="list-group-item"><strong>Start Date:</strong> {record.start_date}</li>

@@ -5,7 +5,7 @@ import LoginStyles from '../styles/LoginStyles.css'
 
 function Login({ setAuth, setRole }) {  // props setAuth and setRole
 
-  const [formData, setFormData] = useState({ username: '', password_hash: '' })
+  const [formData, setFormData] = useState({ username: '', password: '' })
 
   const navigate = useNavigate()
 
@@ -59,8 +59,8 @@ function Login({ setAuth, setRole }) {  // props setAuth and setRole
             <input
               type="password"
               className="form-control"
-              name="password_hash"
-              value={formData.password_hash}
+              name="password"
+              value={formData.password}
               onChange={handleChange}
               required
             />

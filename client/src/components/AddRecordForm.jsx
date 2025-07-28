@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import axios from 'axios'
 
 function AddRecordForm() {
@@ -14,6 +14,7 @@ function AddRecordForm() {
         description: '',
         severity_level: 'None',
         diagnosed_by: '',
+        assigned_to: '',
         status: 'Pending',
         repair_cost: '',
         start_date: '',
@@ -36,9 +37,23 @@ function AddRecordForm() {
             alert('Record added!');
         } catch (err) {
             console.error(err);
-            alert('Something went wrong.');
+            alert('Something went wrong.')
         }
-    };
+    }
+
+    const [users, setUsers] = useState([]);
+
+    useEffect(() =>{
+        const fetchUsers = async() =>{
+            try{
+                const response = await axios.get('http://88.200.63.148:6060/api/records/users/list')
+                setUsers(response.data)
+            }catch(err){
+                console.error('Error fetching usrs',err)
+            }
+        }
+        fetchUsers()
+    },[])
 
     return (
         <div className="container mt-5">
@@ -87,7 +102,22 @@ function AddRecordForm() {
                 </div>
                 <div className="mb-1">
                     <label className="form-label">Diagnosed by</label>
-                    <input type="text" className="form-control" name="diagnosed_by" value={formData.diagnosed_by} onChange={handleChange} />
+                    <select className="form-select" name="diagnosed_by" value={formData.diagnosed_by} onChange={handleChange}>
+                        <option value="" disabled>Select Technician</option>
+                        {users.map(user =>(
+                            <option key={user.username} value={user.username}>{user.username}</option>
+                        ))}
+                    </select>
+                    {/* <input type="text" className="form-control" name="diagnosed_by" value={formData.diagnosed_by} onChange={handleChange} /> */}
+                </div>
+                <div className="mb-1">
+                    <label className="form-label">Assigned to</label>
+                    <select className="form-select" name="assigned_to" value={formData.assigned_to} onChange={handleChange}>
+                        <option value="" disabled>Select Technician</option>
+                        {users.map(user =>(
+                            <option key={user.user_id} value={user.user_id}>{user.username}</option>
+                        ))}
+                    </select>
                 </div>
                 <div className="mb-1">
                     <label className="form-label">Status</label>
