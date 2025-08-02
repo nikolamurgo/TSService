@@ -162,6 +162,8 @@ router.put('/:id', async (req,res) =>{
         const deviceId = repair[0].device_id;
         const customerId = repair[0].customer_id;
 
+        const endDate = status === 'Completed' ? new Date().toISOString().slice(0, 19).replace('T', ' ') : null
+
         // update Customer info
         await db.promise().query(
             `UPDATE Customer SET first_name = ?, last_name = ?, email = ?, phone_number = ?, address = ?
@@ -181,7 +183,7 @@ router.put('/:id', async (req,res) =>{
             SET description = ?, severity_level = ?, status = ?, repair_cost= ?, assigned_to = ?,
             repair_notes = ?, end_date = ?
             WHERE repair_id = ?`
-            , [description, severity_level, status, repair_cost, assigned_to, repair_notes, end_date, repairId]
+            , [description, severity_level, status, repair_cost, assigned_to, repair_notes, endDate, repairId]
         )
 
         res.json({

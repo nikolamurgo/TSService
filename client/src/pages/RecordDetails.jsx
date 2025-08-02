@@ -239,6 +239,7 @@ function RecordDetails() {
                     <li className="list-group-item"><strong>Assigned To:</strong> {record.username}</li>
                     <li className="list-group-item"><strong>Status:</strong> {record.status}</li>
                     <li className="list-group-item"><strong>Start Date:</strong> {record.start_date.split('T')[0]}</li>
+                    <li className="list-group-item"><strong>End Date:</strong> {record.end_date.split('T')[0]}</li>
                     <li className="list-group-item"><strong>Repair Notes:</strong><div className="mt-2 p-2 bg- light rounded">{record.repair_notes || 'No notes available'}</div></li>                   
                     <li className="list-group-item"><strong>Cost:</strong> {record.repair_cost}€</li>
                 </ul>
