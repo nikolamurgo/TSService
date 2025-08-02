@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react"
+import { use, useEffect, useState } from "react"
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
 function AddRecordForm() {
@@ -20,6 +21,8 @@ function AddRecordForm() {
         start_date: '',
     })
 
+    const navigate = useNavigate()
+
     const handleChange = (e) => {
         const { name, value } = e.target
         setFormData(prev => ({
@@ -35,6 +38,7 @@ function AddRecordForm() {
         try {
             await axios.post('http://88.200.63.148:6060/api/records/add-record', formData);
             alert('Record added!');
+            navigate('/')
         } catch (err) {
             console.error(err);
             alert('Something went wrong.')
@@ -131,10 +135,10 @@ function AddRecordForm() {
                     <label className="form-label">Estimated Cost</label>
                     <input type="text" className="form-control" name="repair_cost" value={formData.repair_cost} onChange={handleChange} />
                 </div>
-                <div className="mb-1">
+                {/* <div className="mb-1">
                     <label className="form-label">Date of Reported Issue</label>
                     <input type="date" className="form-control" name="start_date" value={formData.start_date} onChange={handleChange} />
-                </div>
+                </div> */}
                 <button type="submit" className="btn btn-primary">Add Record</button>
             </form>
         </div>

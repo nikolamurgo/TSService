@@ -110,13 +110,18 @@ router.get('/:id', async (req, res) => {
                 r.repair_id,
                 c.first_name,
                 c.last_name,
+                c.email,
+                c.phone_number,
+                c.address,
                 d.model,
                 d.imei,
                 r.description,
                 r.severity_level,
                 r.status,
                 r.repair_cost,
+                r.repair_notes,
                 r.start_date,
+                r.end_date,
                 r.diagnosed_by,
                 r.assigned_to,
                 u.username
@@ -137,7 +142,7 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req,res) =>{
     const repairId = req.params.id
     const {
-        model, imei, description, severity_level, status, repair_cost
+        model, imei, description, severity_level, status, repair_cost, assigned_to
     } = req.body
     
     try{
@@ -150,9 +155,9 @@ router.put('/:id', async (req,res) =>{
         // update Repair Information
         await db.promise().query(
             `UPDATE Repair
-            SET description = ?, severity_level = ?, status = ?, repair_cost= ?
+            SET description = ?, severity_level = ?, status = ?, repair_cost= ?, assigned_to = ?
             WHERE repair_id = ?`
-            , [description, severity_level, status, repair_cost, repairId]
+            , [description, severity_level, status, repair_cost, assigned_to, repairId]
         )
 
         res.json({
@@ -160,12 +165,48 @@ router.put('/:id', async (req,res) =>{
             message: 'Record is updated'
         })
     } catch(err){
-        res.status(500).json({
-            success: false,
-            message: 'error updating record',
-            error: err.message
-        })
+        console.log(err)
     }
 })
+
+// DELETE route for a record
+router.delete('/:id', async (req, res) => {
+    const repairId = req.params.id;
+    try {
+        // First get device_id from repair record
+        const [repair] = await db.promise().query(
+            'SELECT device_id FROM Repair WHERE repair_id = ?', 
+            [repairId]
+        );
+        
+        if (repair.length === 0) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Record not found' 
+            });
+        }
+
+        const deviceId = repair[0].device_id;
+
+        // Get customer_id from device
+        const [device] = await db.promise().query(
+            'SELECT customer_id FROM Device WHERE device_id = ?',
+            [deviceId]
+        );
+        const customerId = device[0].customer_id;
+
+        // Delete in proper order
+        await db.promise().query('DELETE FROM Repair WHERE repair_id = ?', [repairId]);
+        await db.promise().query('DELETE FROM Device WHERE device_id = ?', [deviceId]);
+        await db.promise().query('DELETE FROM Customer WHERE customer_id = ?', [customerId]);
+
+        res.json({ 
+            success: true, 
+            message: 'Record deleted successfully' 
+        });
+    } catch (err) {
+        console.log(err);
+    }
+});
 
 module.exports = router;
