@@ -127,6 +127,7 @@ function AddRecordForm() {
                     <label className="form-label">Status</label>
                     <select className="form-select" name="status" value={formData.status} onChange={handleChange}>
                         <option>Pending</option>
+                        <option>Waiting for Parts</option>
                         <option>In Progress</option>
                         <option>Completed</option>
                     </select>

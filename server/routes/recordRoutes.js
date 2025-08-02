@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const db = require('../db/connection')
 
+
 // POST route to add a new repair record
 router.post('/add-record', async (req, res) => {
     const { 
@@ -81,22 +82,56 @@ router.get('/users/list', async (req,res) =>{
 // GET all the records
 router.get('/', async (req, res) => {
     try {
-        const [rows] = await db.promise().query(`
+        const { status, search, sort } = req.query;
+        
+        let query = `
             SELECT 
                 r.repair_id,
                 c.first_name,
                 c.last_name,
                 d.model,
+                d.imei,
                 r.status,
-                r.start_date
+                r.start_date,
+                r.end_date,
+                c.phone_number
             FROM Repair r
             JOIN Device d ON r.device_id = d.device_id
             JOIN Customer c ON d.customer_id = c.customer_id
-            ORDER BY r.start_date DESC
-        `);
-        res.json(rows);
+        `;
+        
+        const whereClauses = []
+        const params = []
+        
+        if (status) {
+            whereClauses.push('r.status = ?');
+            params.push(status)
+        }
+        
+        if (search) {
+            whereClauses.push(`
+                (c.first_name LIKE ? OR 
+                c.last_name LIKE ? OR 
+                d.imei LIKE ?
+                OR c.phone_number LIKE ?)
+            `);
+            params.push(`%${search}%`, `%${search}%`, `%${search}%`,`%${search}%`)
+        }
+        
+        if (whereClauses.length > 0) {
+            query += ' WHERE ' + whereClauses.join(' AND ')
+        }
+        
+        if (sort === 'oldest') {
+            query += ' ORDER BY r.start_date ASC'
+        } else {
+            query += ' ORDER BY r.start_date DESC'
+        }
+        
+        const [rows] = await db.promise().query(query, params)
+        res.json(rows)
     } catch (err) {
-        res.status(500).json({ message: 'Error fetching records' });
+        console.log('Error fetching records');
     }
 })
 
