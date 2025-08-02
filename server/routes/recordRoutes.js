@@ -142,22 +142,46 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req,res) =>{
     const repairId = req.params.id
     const {
-        model, imei, description, severity_level, status, repair_cost, assigned_to
+        first_name, last_name, email, phone_number, address, model, imei, description, severity_level,
+        diagnosed_by, assigned_to, status, repair_notes, repair_cost, start_date, end_date
     } = req.body
     
     try{
+        const [repair] = await db.promise().query(
+            `SELECT d.device_id, d.customer_id 
+             FROM Repair r
+             JOIN Device d ON r.device_id = d.device_id
+             WHERE r.repair_id = ?`,
+            [repairId]
+        )
+
+        if (repair.length === 0) {
+            return console.log('Record not found' )
+        }
+
+        const deviceId = repair[0].device_id;
+        const customerId = repair[0].customer_id;
+
+        // update Customer info
+        await db.promise().query(
+            `UPDATE Customer SET first_name = ?, last_name = ?, email = ?, phone_number = ?, address = ?
+            WHERE customer_id = ?`,
+            [first_name, last_name, email, phone_number, address, customerId]
+        )
+        
         // update Device Information
         await db.promise().query(
-            'UPDATE Device SET model = ?, imei = ? WHERE device_id = (SELECT device_id FROM Repair WHERE repair_id = ?)',
-            [model, imei, repairId]
+            'UPDATE Device SET model = ?, imei = ? WHERE device_id = ?',
+            [model, imei, deviceId]
         )
 
         // update Repair Information
         await db.promise().query(
             `UPDATE Repair
-            SET description = ?, severity_level = ?, status = ?, repair_cost= ?, assigned_to = ?
+            SET description = ?, severity_level = ?, status = ?, repair_cost= ?, assigned_to = ?,
+            repair_notes = ?, end_date = ?
             WHERE repair_id = ?`
-            , [description, severity_level, status, repair_cost, assigned_to, repairId]
+            , [description, severity_level, status, repair_cost, assigned_to, repair_notes, end_date, repairId]
         )
 
         res.json({

@@ -213,6 +213,17 @@ function RecordDetails() {
                             onChange={handleChange}
                         />
                     </div>
+                    <br></br>
+                    <div className="mb-3">
+                        <label className="form-label">Repair Notes</label>
+                        <textarea 
+                            className="form-control" 
+                            name="repair_notes" 
+                            value={formData.repair_notes || ''} 
+                            onChange={handleChange}
+                            rows="4"
+                        />
+                    </div>                    
                 </div>
             ) : (
                 <ul className="list-group">
@@ -228,6 +239,7 @@ function RecordDetails() {
                     <li className="list-group-item"><strong>Assigned To:</strong> {record.username}</li>
                     <li className="list-group-item"><strong>Status:</strong> {record.status}</li>
                     <li className="list-group-item"><strong>Start Date:</strong> {record.start_date.split('T')[0]}</li>
+                    <li className="list-group-item"><strong>Repair Notes:</strong><div className="mt-2 p-2 bg- light rounded">{record.repair_notes || 'No notes available'}</div></li>                   
                     <li className="list-group-item"><strong>Cost:</strong> {record.repair_cost}€</li>
                 </ul>
             )}
