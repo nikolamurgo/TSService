@@ -5,6 +5,7 @@ import Layout from './components/Layout'
 import RecordDetails from './pages/RecordDetails'
 import { useState } from 'react'
 import Login from './pages/Login'
+import Account from './pages/Account'
 
 function App() {
   const [isAuthenticated, setAuth] = useState(!!localStorage.getItem('token'))
@@ -20,6 +21,7 @@ function App() {
         <Route index element={<Dashboard setAuth={setAuth} />} />
         <Route path="add-record" element={<AddRecord />} />
         <Route path="/records/:id" element={<RecordDetails />} />
+        <Route path="/account" element={<Account/>} />
 
       </Route>
 

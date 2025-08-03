@@ -11,6 +11,10 @@ function Header({setAuth}) {
     navigate('/login')
   }
 
+  const handleAccount = () => {
+    navigate('/account')
+  }
+
 
   return (
     <div className="header-container">
@@ -19,7 +23,7 @@ function Header({setAuth}) {
           <a className="navbar-brand" href='#'>Dashboard</a>
           <form className="d-flex" role="search">
             <button className="btn btn-dark navbuttons" onClick={handleLogout} >Logout</button>
-            <button className="btn btn-primary navbuttons" type="submit">Account</button>
+            <button className="btn btn-primary navbuttons" onClick={handleAccount}>Account</button>
           </form>
         </div>
       </nav>
