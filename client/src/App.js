@@ -17,7 +17,7 @@ function App() {
 
       <Route path="/" element={isAuthenticated ? <Layout setAuth={setAuth} /> : <Navigate to='/login' />}>
 
-        <Route index element={<Dashboard />} />
+        <Route index element={<Dashboard setAuth={setAuth} />} />
         <Route path="add-record" element={<AddRecord />} />
         <Route path="/records/:id" element={<RecordDetails />} />
 

@@ -23,7 +23,7 @@ function Login({ setAuth, setRole }) {  // props setAuth and setRole
         setAuth(true)
         setRole(res.data.user.role)
 
-        localStorage.setItem('token', 'dummyToken') // set actual token JWT later
+        localStorage.setItem('token', res.data.token)
         localStorage.setItem('username', res.data.user.username)
 
         navigate('/'); // after login successfull go to the dashboard
