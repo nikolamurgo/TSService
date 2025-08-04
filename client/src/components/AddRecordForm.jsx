@@ -64,19 +64,19 @@ function AddRecordForm() {
             <h2>Add New Repair Record</h2>
             <form onSubmit={handleSubmit}>
                 <div className="mb-1">
-                    <label className="form-label">Customer Name</label>
+                    <label className="form-label">Customer Name<span className="text-danger">*</span></label>
                     <input type="text" className="form-control" name="first_name" value={formData.first_name} onChange={handleChange} required />
                 </div>
                 <div className="mb-1">
-                    <label className="form-label">Customer Surname</label>
+                    <label className="form-label">Customer Surname<span className="text-danger">*</span></label>
                     <input type="text" className="form-control" name="last_name" value={formData.last_name} onChange={handleChange} required />
                 </div>
                 <div className="mb-1">
-                    <label className="form-label">Email Address</label>
+                    <label className="form-label">Email Address<span className="text-danger">*</span></label>
                     <input type="email" className="form-control" name="email" value={formData.email} onChange={handleChange} required />
                 </div>
                 <div className="mb-1">
-                    <label className="form-label">Phone Number</label>
+                    <label className="form-label">Phone Number<span className="text-danger">*</span></label>
                     <input type="text" className="form-control" name="phone_number" value={formData.phone_number} onChange={handleChange} required />
                 </div>
                 <div className="mb-1">
@@ -84,16 +84,16 @@ function AddRecordForm() {
                     <input type="text" className="form-control" name="address" value={formData.address} onChange={handleChange} />
                 </div>
                 <div className="mb-1">
-                    <label className="form-label">Phone Brand and Model</label>
-                    <input type="text" className="form-control" name="model" value={formData.model} onChange={handleChange} />
+                    <label className="form-label">Phone Brand and Model<span className="text-danger">*</span></label>
+                    <input type="text" className="form-control" name="model" value={formData.model} onChange={handleChange} required />
                 </div>
                 <div className="mb-1">
                     <label className="form-label">Phone IMEI</label>
                     <input type="text" className="form-control" name="imei" value={formData.imei} onChange={handleChange} />
                 </div>
                 <div className="mb-1">
-                    <label className="form-label">Reported Issue Description</label>
-                    <input type="text" className="form-control" name="description" value={formData.description} onChange={handleChange} />
+                    <label className="form-label">Reported Issue Description<span className="text-danger">*</span></label>
+                    <input type="text" className="form-control" name="description" value={formData.description} onChange={handleChange} required />
                 </div>
                 <div className="mb-1">
                     <label className="form-label">Severity Level</label>
@@ -105,8 +105,8 @@ function AddRecordForm() {
                     </select>
                 </div>
                 <div className="mb-1">
-                    <label className="form-label">Diagnosed by</label>
-                    <select className="form-select" name="diagnosed_by" value={formData.diagnosed_by} onChange={handleChange}>
+                    <label className="form-label">Diagnosed by<span className="text-danger">*</span></label>
+                    <select className="form-select" name="diagnosed_by" value={formData.diagnosed_by} onChange={handleChange} required >
                         <option value="" disabled>Select Technician</option>
                         {users.map(user =>(
                             <option key={user.username} value={user.username}>{user.username}</option>
@@ -115,8 +115,8 @@ function AddRecordForm() {
                     {/* <input type="text" className="form-control" name="diagnosed_by" value={formData.diagnosed_by} onChange={handleChange} /> */}
                 </div>
                 <div className="mb-1">
-                    <label className="form-label">Assigned to</label>
-                    <select className="form-select" name="assigned_to" value={formData.assigned_to} onChange={handleChange}>
+                    <label className="form-label">Assigned to<span className="text-danger">*</span></label>
+                    <select className="form-select" name="assigned_to" value={formData.assigned_to} onChange={handleChange} required >
                         <option value="" disabled>Select Technician</option>
                         {users.map(user =>(
                             <option key={user.user_id} value={user.user_id}>{user.username}</option>
@@ -133,8 +133,8 @@ function AddRecordForm() {
                     </select>
                 </div>
                 <div className="mb-1">
-                    <label className="form-label">Estimated Cost</label>
-                    <input type="text" className="form-control" name="repair_cost" value={formData.repair_cost} onChange={handleChange} />
+                    <label className="form-label">Estimated Cost<span className="text-danger">*</span></label>
+                    <input type="text" className="form-control" name="repair_cost" value={formData.repair_cost} onChange={handleChange} required />
                 </div>
                 {/* <div className="mb-1">
                     <label className="form-label">Date of Reported Issue</label>
