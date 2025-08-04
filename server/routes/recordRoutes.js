@@ -113,9 +113,10 @@ router.get('/', async (req, res) => {
                 (c.first_name LIKE ? OR 
                 c.last_name LIKE ? OR 
                 d.imei LIKE ?
-                OR c.phone_number LIKE ?)
+                OR c.phone_number LIKE ?
+                OR d.model LIKE ?)
             `);
-            params.push(`%${search}%`, `%${search}%`, `%${search}%`,`%${search}%`)
+            params.push(`%${search}%`, `%${search}%`, `%${search}%`,`%${search}%`, `%${search}%`)
         }
         
         if (whereClauses.length > 0) {
