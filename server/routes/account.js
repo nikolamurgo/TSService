@@ -9,7 +9,7 @@ router.get('/:id', async (req,res) => {
 
     try{
         const [rows] = await db.promise().query(
-            `SELECT username, email FROM User WHERE user_id = ?`,
+            `SELECT username, email, role FROM User WHERE user_id = ?`,
             [userId]
         )
         if(rows.length === 0){
@@ -22,8 +22,24 @@ router.get('/:id', async (req,res) => {
 })
 
 // update account info
-router.put('/', async (req,res) =>{
-    //fetch
+router.put('/:id', async (req,res) =>{
+    const userId = req.params.id
+    const {username, email} = req.body
+
+    if (!userId || !username || !email){
+        return res.status(400)
+    }
+    
+    try{
+        await db.promise().query(
+            `UPDATE User SET username = ?, email = ? WHERE user_id = ?`,
+            [username, email, userId]
+        )
+
+        res.json({message: "updated successfully"})
+    }catch(err){
+        console.log(err)
+    }
 })
 
 module.exports = router
