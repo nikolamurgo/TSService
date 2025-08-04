@@ -13,7 +13,21 @@ router.get('/', async (req, res) => {
     }
 })
 
-// add item to stockPart Tbi
+// add item to stockPart
+router.get('/add', async(req,res) =>{
+    const { part_name, unit_price, quantity_available} = req.body
+    try{
+        const [result] = await db.promise().query(`
+            INSERT INTO StockItem (part_name, unit_price, quantity_available)
+            VALUES (?,?,?)`,
+        [part_name, unit_price, quantity_available]
+    )
+    res.json({message: 'item is added', partId: result.insertId})
+            
+    }catch(err){
+        console.log(err)
+    }
+})
 // remove item from stockPart TBI
 // update item fr example name quantity price TBI
 

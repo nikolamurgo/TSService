@@ -6,6 +6,7 @@ import RecordDetails from './pages/RecordDetails'
 import { useState } from 'react'
 import Login from './pages/Login'
 import Account from './pages/Account'
+import Inventory from './pages/Inventory'
 
 function App() {
   const [isAuthenticated, setAuth] = useState(!!localStorage.getItem('token'))
@@ -22,6 +23,7 @@ function App() {
         <Route path="add-record" element={<AddRecord />} />
         <Route path="/records/:id" element={<RecordDetails />} />
         <Route path="/account" element={<Account/>} />
+        <Route path="/inventory" element={<Inventory/>} />
 
       </Route>
 
