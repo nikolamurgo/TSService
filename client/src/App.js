@@ -8,10 +8,12 @@ import Login from './pages/Login'
 import Account from './pages/Account'
 import Inventory from './pages/Inventory'
 import Customers from './pages/Customers'
+import Productivity from './pages/Productivity'
+import AddNewUser from './pages/AddNewUser'
 
 function App() {
   const [isAuthenticated, setAuth] = useState(!!localStorage.getItem('token'))
-  const [role, setRole] = useState(null)
+  const [role, setRole] = useState(localStorage.getItem('role'))
 
   return (
 
@@ -26,6 +28,13 @@ function App() {
         <Route path="/account" element={<Account/>} />
         <Route path="/inventory" element={<Inventory/>} />
         <Route path="/customers" element={<Customers />} />
+
+        {role === 'administrator' &&(
+          <>
+          <Route path="/productivity" element={<Productivity />} />
+          <Route path="/add-new-user" element={<AddNewUser />} />
+          </>
+        )}
 
       </Route>
 
