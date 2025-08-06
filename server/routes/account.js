@@ -42,4 +42,34 @@ router.put('/:id', async (req,res) =>{
     }
 })
 
+// change password
+router.put('/:id/password', async (req,res) => {
+    const userId = req.params.id
+    const {oldPassword, newPassword} = req.body
+
+    try{
+        const [rows] = await db.promise().query(
+            `SELECT password FROM User WHERE user_id = ?`,
+            [userId]
+        )
+
+        const currentPassword = rows[0].password
+        const isMatch = oldPassword === currentPassword
+
+        if (!isMatch) {
+            return res.status(401).json({ message: "Incorrect current password." })
+        }
+
+
+        await db.promise().query(
+            `UPDATE User SET password = ? WHERE user_id = ?`,
+            [newPassword, userId]
+        )
+
+        res.json({ message: "Password updated successfully." })
+    }catch(err){
+        console.error(err)
+    }
+})
+
 module.exports = router
