@@ -26,6 +26,7 @@ function Login({ setAuth, setRole }) {  // props setAuth and setRole
         localStorage.setItem('token', res.data.token)
         localStorage.setItem('username', res.data.user.username)
         localStorage.setItem('user_id', res.data.user.id)
+        localStorage.setItem('role', res.data.user.role)
 
         navigate('/'); // after login successfull go to the dashboard
 
