@@ -17,6 +17,13 @@ function authenticateToken(req,res,next){
     })
 }
 
+function checkAdmin(req, res, next) {
+    if (req.user.role !== 'administrator') {
+        return res.json({ message: 'Forbidden: Requires administrator privileges.' })
+    }
+    next()
+}
+
 router.post('/login', async (req,res) => {
     const {username, password} = req.body
 
@@ -57,6 +64,34 @@ router.post('/login', async (req,res) => {
     } catch (err){
         console.error(err)
         res.status(500).json({message: 'server error'})
+    }
+})
+
+// add new user, admin only 
+router.post('/add-user', authenticateToken, checkAdmin, async (req, res) => {
+    const { username, password, email, role } = req.body
+
+    try {
+        // check if user with the same username or email already exists
+        const [existingUser] = await db.promise().query(
+            'SELECT * FROM User WHERE username = ? OR email = ?',
+            [username, email]
+        )
+
+        if (existingUser.length > 0) {
+            return res.json({ message: 'Username or email already exists' })
+        }
+
+        // insert the new user into the database
+        await db.promise().query(
+            'INSERT INTO User (username, password, email, role) VALUES (?, ?, ?, ?)',
+            [username, password, email, role]
+        )
+
+        res.json({ message: 'User created successfully.' })
+
+    } catch (err) {
+        res.json({ message: 'error' })
     }
 })
 
