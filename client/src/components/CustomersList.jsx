@@ -16,10 +16,16 @@ function CustomersList(){
         }
         fetchCustomers()
     }, [])
-    
+
     return(
         <div>
-            {/* tbi*/}
+            <ul>
+                {customers.map(customer => (
+                <li key={customer.CustomerID}>
+                    {customer.first_name} {customer.last_name} - {customer.email}
+                </li>
+                ))}
+            </ul>
         </div>
     )
 }
