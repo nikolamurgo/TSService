@@ -22,6 +22,7 @@ function Sidebar() {
                         <hr className="text-white" />
                         <li className='nav-item'><Link to="/productivity" className='nav-link text-white'>Productivity</Link></li>
                         <li className='nav-item'><Link to="/add-new-user" className='nav-link text-white'>Add New User</Link></li>
+                        <li className='nav-item'><Link to="/manageusers" className='nav-link text-white'>Manage Users</Link></li>
                         </>
                     )}
                 </ul>
