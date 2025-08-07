@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth')
 const accountRoutes = require('./routes/account')
 const inventoryRoutes = require('./routes/inventory')
 const customersRoutes = require('./routes/customers')
+const usersRoutes = require('./routes/users')
 
 require('dotenv').config()
 const PORT = process.env.PORT 
@@ -22,6 +23,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/account', accountRoutes)
 app.use('/api/inventory', inventoryRoutes)
 app.use('/api/customers', customersRoutes)
+app.use('/api/users', usersRoutes)
 
 app.get('/', (req, res) => {
   res.send('Backend is running')
