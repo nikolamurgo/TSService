@@ -10,6 +10,7 @@ import Inventory from './pages/Inventory'
 import Customers from './pages/Customers'
 import Productivity from './pages/Productivity'
 import AddNewUser from './pages/AddNewUser'
+import ManageUsers from './pages/ManageUsers'
 
 function App() {
   const [isAuthenticated, setAuth] = useState(!!localStorage.getItem('token'))
@@ -28,6 +29,7 @@ function App() {
         <Route path="/account" element={<Account/>} />
         <Route path="/inventory" element={<Inventory/>} />
         <Route path="/customers" element={<Customers />} />
+        <Route path="/manageusers" element={<ManageUsers />} />
 
         {role === 'administrator' &&(
           <>
