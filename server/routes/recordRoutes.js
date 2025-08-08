@@ -2,6 +2,9 @@ const express = require('express')
 const router = express.Router()
 const db = require('../db/connection')
 
+// this is for sending mail on update status of record
+const { sendStatusUpdateEmail } = require('../utils/mailer')
+
 
 // POST route to add a new repair record
 router.post('/add-record', async (req, res) => {
@@ -184,9 +187,10 @@ router.put('/:id', async (req,res) =>{
     
     try{
         const [repair] = await db.promise().query(
-            `SELECT d.device_id, d.customer_id 
+            `SELECT d.device_id, d.customer_id, r.status as oldStatus, c.email as customerEmail, c.first_name as customerFirstName
              FROM Repair r
              JOIN Device d ON r.device_id = d.device_id
+             JOIN Customer c ON d.customer_id = c.customer_id
              WHERE r.repair_id = ?`,
             [repairId]
         )
@@ -195,8 +199,13 @@ router.put('/:id', async (req,res) =>{
             return console.log('Record not found' )
         }
 
-        const deviceId = repair[0].device_id;
-        const customerId = repair[0].customer_id;
+        const { 
+            oldStatus, 
+            customerEmail, 
+            customerFirstName, 
+            device_id: deviceId,      
+            customer_id: customerId   
+        } = repair[0];
 
         const endDate = status === 'Completed' ? new Date().toISOString().slice(0, 19).replace('T', ' ') : null
 
@@ -221,6 +230,15 @@ router.put('/:id', async (req,res) =>{
             WHERE repair_id = ?`
             , [description, severity_level, status, repair_cost, assigned_to, repair_notes, endDate, repairId]
         )
+
+        if(status && status !== oldStatus){
+            await sendStatusUpdateEmail(
+                customerEmail,
+                customerFirstName,
+                repairId,
+                status
+            )
+        }
 
         res.json({
             success: true,
