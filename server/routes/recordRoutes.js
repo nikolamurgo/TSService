@@ -289,4 +289,28 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+router.get('/my-repairs/:userId', async (req, res) => {
+    const { userId } = req.params
+    try {
+        const [records] = await db.promise().query(`
+            SELECT 
+                r.repair_id,
+                d.model,
+                r.description, 
+                r.status, 
+                r.start_date, 
+                c.first_name, 
+                c.last_name
+            FROM Repair r
+            JOIN Device d ON d.device_id = r.device_id
+            JOIN Customer c ON d.customer_id = c.customer_id
+            WHERE r.assigned_to = ?
+            ORDER BY r.start_date DESC
+        `, [userId])
+        res.json(records)
+    } catch (err) {
+        res.json({ message: "Failed to fetch user's repairs"})
+    }
+})
+
 module.exports = router;
