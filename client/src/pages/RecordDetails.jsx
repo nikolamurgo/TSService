@@ -11,16 +11,27 @@ function RecordDetails() {
     const [formData, setFormData] = useState({})
     const [users, setUsers] = useState([])
 
+    // used for adding parts
+    const [repairParts, setRepairParts] = useState([])
+    const [stockItems, setStockItems] = useState([])
+    const [selectedPart, setSelectedPart] = useState('')
+    const [quantityUsed, setQuantityUsed] = useState(1)
+    const [searchTerm, setSearchTerm] = useState('')
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [recordRes, usersRes] = await Promise.all([
+                const [recordRes, usersRes, repairPartsRes, stockItemsRes] = await Promise.all([
                     axios.get(`http://88.200.63.148:6060/api/records/${id}`),
-                    axios.get('http://88.200.63.148:6060/api/records/users/list')
+                    axios.get('http://88.200.63.148:6060/api/records/users/list'),
+                    axios.get(`http://88.200.63.148:6060/api/repairparts/${id}/parts`),
+                    axios.get('http://88.200.63.148:6060/api/inventory')
                 ])
                 setRecord(recordRes.data)
                 setFormData(recordRes.data)
                 setUsers(usersRes.data)
+                setRepairParts(repairPartsRes.data)
+                setStockItems(stockItemsRes.data)
             } catch (error) {
                 console.error("Error fetching data:", error)
             }
@@ -34,7 +45,53 @@ function RecordDetails() {
             ...prev,
             [name]: value
         }))
-    }   
+    }
+
+    const handleAddPart = async (e) =>{
+        e.preventDefault()
+
+        if (!selectedPart || quantityUsed <= 0) {
+            alert('Please select a part and enter a valid quantity.')
+            return
+        }
+
+        // debug why part is nt added ot the list of added parts?????
+        // console.log('Attempting to add part:', {
+        // recordId: id,
+        // part_id: selectedPart,
+        // quantity_used: quantityUsed
+
+        try{
+            await axios.post(`http://88.200.63.148:6060/api/repairparts/${id}/parts`,{
+                part_id: selectedPart,
+                quantity_used: quantityUsed,
+            })
+            
+            // Refetch data on success
+            const [repairPartsRes, stockItemsRes] = await Promise.all([
+                axios.get(`http://88.200.63.148:6060/api/repairparts/${id}/parts`),
+                axios.get('http://88.200.63.148:6060/api/inventory')
+            ]);
+            setRepairParts(repairPartsRes.data)
+            setStockItems(stockItemsRes.data)
+
+            // Reset form
+            setSelectedPart('')
+            setQuantityUsed(1)
+            setSearchTerm('')
+            alert('Part added successfully!')
+        }catch(err){
+
+            console.error("Error adding part:", err)
+            alert(`Failed to add part`)
+        }
+    }
+
+    const filteredStockItems = searchTerm
+        ? stockItems.filter(item =>
+            item.part_name.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        : [];
 
     const handleUpdate = async () => {
         try {
@@ -82,92 +139,40 @@ function RecordDetails() {
                 <div className="card p-4">
                     <div className="mb-3">
                         <label className="form-label">Customer First Name</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="first_name"
-                            value={formData.first_name || ''}
-                            onChange={handleChange}
-                        />
+                        <input type="text" className="form-control" name="first_name" value={formData.first_name || ''} onChange={handleChange}/>
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Customer Last Name</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="last_name"
-                            value={formData.last_name || ''}
-                            onChange={handleChange}
-                        />
+                        <input type="text" className="form-control" name="last_name" value={formData.last_name || ''} onChange={handleChange}/>
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Customer Email</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="email"
-                            value={formData.email || ''}
-                            onChange={handleChange}
-                        />
+                        <input type="text" className="form-control" name="email" value={formData.email || ''} onChange={handleChange} />
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Phone Number</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="phone_number"
-                            value={formData.phone_number || ''}
-                            onChange={handleChange}
-                        />
+                        <input type="text" className="form-control" name="phone_number" value={formData.phone_number || ''} onChange={handleChange}/>
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Address</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="address"
-                            value={formData.address || ''}
-                            onChange={handleChange}
+                        <input type="text" className="form-control" name="address" value={formData.address || ''} onChange={handleChange}
                         />
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Phone Model</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="model"
-                            value={formData.model || ''}
-                            onChange={handleChange}
-                        />
+                        <input type="text" className="form-control" name="model" value={formData.model || ''} onChange={handleChange}/>
                     </div>
                     <div className="mb-3">
                         <label className="form-label">IMEI</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="imei"
-                            value={formData.imei || ''}
-                            onChange={handleChange}
-                        />
+                        <input type="text" className="form-control" name="imei" value={formData.imei || ''} onChange={handleChange}/>
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Problem Description</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="description"
-                            value={formData.description || ''}
-                            onChange={handleChange}
-                        />
+                        <input type="text" className="form-control" name="description" value={formData.description || ''} onChange={handleChange} />
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Severity Level</label>
-                        <select
-                            className="form-select"
-                            name="severity_level"
-                            value={formData.severity_level || 'None'}
-                            onChange={handleChange}
-                        >
+                        <select className="form-select" name="severity_level" value={formData.severity_level || 'None'} onChange={handleChange}>
                             <option value="None">None</option>
                             <option value="Low">Low</option>
                             <option value="Medium">Medium</option>
@@ -176,12 +181,7 @@ function RecordDetails() {
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Status</label>
-                        <select
-                            className="form-select"
-                            name="status"
-                            value={formData.status || 'Pending'}
-                            onChange={handleChange}
-                        >
+                        <select className="form-select" name="status" value={formData.status || 'Pending'} onChange={handleChange}>
                             <option value="Pending">Pending</option>
                             <option value="Waiting for Parts">Waiting for Parts</option>
                             <option value="In Progress">In Progress</option>
@@ -190,12 +190,7 @@ function RecordDetails() {
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Assigned To</label>
-                        <select
-                            className="form-select"
-                            name="assigned_to"
-                            value={formData.assigned_to || ''}
-                            onChange={handleChange}
-                        >
+                        <select className="form-select" name="assigned_to" value={formData.assigned_to || ''} onChange={handleChange}>
                             <option value="" disabled>Select Technician</option>
                             {users.map(user => (
                                 <option key={user.user_id} value={user.user_id}>
@@ -206,25 +201,39 @@ function RecordDetails() {
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Repair Cost</label>
-                        <input
-                            type="number"
-                            className="form-control"
-                            name="repair_cost"
-                            value={formData.repair_cost || ''}
-                            onChange={handleChange}
-                        />
+                        <input type="number" className="form-control" name="repair_cost" value={formData.repair_cost || ''} onChange={handleChange}/>
                     </div>
                     <br></br>
                     <div className="mb-3">
                         <label className="form-label">Repair Notes</label>
-                        <textarea 
-                            className="form-control" 
-                            name="repair_notes" 
-                            value={formData.repair_notes || ''} 
-                            onChange={handleChange}
-                            rows="4"
-                        />
-                    </div>                    
+                        <textarea className="form-control" name="repair_notes" value={formData.repair_notes || ''} onChange={handleChange}rows="4"/>
+                    </div>
+
+                    <div className="mt-4 p-4 border rounded">
+                        <h4 className="mb-3">Add Repair Part</h4>
+                        <form onSubmit={handleAddPart}>
+                            <div className="mb-3">
+                                <label htmlFor="partSearch" className="form-label">Search for a part</label>
+                                <input type="text" id="partSearch" className="form-control" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Start typing to search..."/>
+                                {searchTerm && (
+                                    <select className="form-select mt-2" onChange={(e) => setSelectedPart(e.target.value)} value={selectedPart} size={filteredStockItems.length > 0 ? Math.min(filteredStockItems.length, 5) : 2}>
+                                        <option value="" disabled>Select a part from search results</option>
+                                        {filteredStockItems.map(item => (
+                                            <option key={item.part_id} value={item.part_id}>
+                                                {item.part_name} (Available: {item.quantity_available})
+                                            </option>
+                                        ))}
+                                    </select>
+                                )}
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="quantity" className="form-label">Quantity</label>
+                                <input type="number" id="quantity" className="form-control" value={quantityUsed} onChange={(e) => setQuantityUsed(parseInt(e.target.value, 10))} min="1" />
+                            </div>
+                            <button type="submit" className="btn btn-info">Add Part to Repair</button>
+                        </form>
+                    </div>
+
                 </div>
             ) : (
                 <ul className="list-group">
@@ -244,7 +253,37 @@ function RecordDetails() {
                     <li className="list-group-item"><strong>Repair Notes:</strong><div className="mt-2 p-2 bg- light rounded">{record.repair_notes || 'No notes available'}</div></li>                   
                     <li className="list-group-item"><strong>Cost:</strong> {record.repair_cost}€</li>
                 </ul>
-            )}
+            )
+            }
+
+            <div className="mt-5">
+                <h3>Parts Used in This Repair</h3>
+                <table className="table">
+                    <thead className="table-light">
+                        <tr>
+                            <th>Part Name</th>
+                            <th>Quantity Used</th>
+                            <th>Unit Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {repairParts.length > 0 ? (
+                            repairParts.map(part => (
+                                <tr key={part.rp_id}>
+                                    <td>{part.part_name}</td>
+                                    <td>{part.quantity_used}</td>
+                                    <td>{part.unit_price}€</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="3" className="text-center">No parts have been added to this repair yet</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     )
 }
