@@ -8,6 +8,7 @@ const inventoryRoutes = require('./routes/inventory')
 const customersRoutes = require('./routes/customers')
 const usersRoutes = require('./routes/users')
 const repairPartRoutes = require('./routes/repairParts')
+const productivityRoutes = require('./routes/productivityRoutes')
 
 require('dotenv').config()
 const PORT = process.env.PORT 
@@ -26,6 +27,7 @@ app.use('/api/inventory', inventoryRoutes)
 app.use('/api/customers', customersRoutes)
 app.use('/api/users', usersRoutes)
 app.use('/api/repairparts', repairPartRoutes)
+app.use('/api/productivity', productivityRoutes)
 
 app.get('/', (req, res) => {
   res.send('Backend is running')
