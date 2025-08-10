@@ -4,7 +4,6 @@ const db = require('../db/connection')
 
 // get stats for productivity
 router.get('/stats', async (req,res) =>{
-    const {range} = req.query
 
     try{
         const [completedPerTechnician] = await db.promise().query(`
