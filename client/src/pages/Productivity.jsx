@@ -1,10 +1,12 @@
 import React from 'react'
+import ProductivityDashboard from '../components/ProductivityDashboard'
 
 function Productivity(){
     return(
         <div>
             <h2>Productivity dashboard</h2>
-            // tbi
+            <hr />
+            <ProductivityDashboard />
         </div>
     )
 }
