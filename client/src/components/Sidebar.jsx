@@ -16,7 +16,6 @@ function Sidebar() {
                     <li className='nav-item'><Link to="/my-repairs" className='nav-link text-white'>My Repairs</Link></li>
                     <li className='nav-item'><Link to="/customers" className='nav-link text-white'>My Customers</Link></li>
                     <li className='nav-item'><Link to="/inventory" className='nav-link text-white'>Inventory</Link></li>
-                    <li className='nav-item'><Link to="/" className='nav-link text-white'>My Statistics</Link></li>
                     {userRole === 'administrator' &&(
                         <>
                         <hr className="text-white" />
