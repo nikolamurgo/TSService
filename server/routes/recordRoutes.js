@@ -55,6 +55,23 @@ router.post('/add-record', async (req, res) => {
             ]
         )
 
+        const repairId = repairResult.insertId
+
+        const agreement_text = `This document serves as a formal Service Repair Agreement.
+            Customer: ${first_name} ${last_name}
+            Device Model: ${model}
+            IMEI/Serial Number: ${imei}
+            Reported Issue: ${description}
+            Initial Estimated Cost: ${repair_cost} EUR
+
+            By leaving the device in our care, the Customer acknowledges the service details outlined above and agrees to the full Terms and Conditions specified in this document.`
+        
+        // Inser the agreement for the repair
+        await db.promise().query(
+            'INSERT INTO RepairAgreement (repair_id, agreement_text, is_signed) VALUES (?, ?, ?)',
+            [repairId, agreement_text, true]
+        )
+
         res.status(200).json({ 
             success: true,
             repairId: repairResult.insertId 
@@ -276,6 +293,8 @@ router.delete('/:id', async (req, res) => {
         const customerId = device[0].customer_id;
 
         // Delete in proper order
+        await db.promise().query('DELETE FROM RepairAgreement WHERE repair_id = ?', [repairId])
+        await db.promise().query('DELETE FROM RepairPart WHERE repair_id = ?', [repairId])
         await db.promise().query('DELETE FROM Repair WHERE repair_id = ?', [repairId]);
         await db.promise().query('DELETE FROM Device WHERE device_id = ?', [deviceId]);
         await db.promise().query('DELETE FROM Customer WHERE customer_id = ?', [customerId]);

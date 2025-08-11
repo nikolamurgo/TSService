@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import {saveAs} from 'file-saver'
 
 function RecordDetails() {
 
@@ -10,6 +11,7 @@ function RecordDetails() {
     const [isEditing, setIsEditing] = useState(false)
     const [formData, setFormData] = useState({})
     const [users, setUsers] = useState([])
+    const [agreement, setAgreement] = useState(null)
 
     // used for adding parts
     const [repairParts, setRepairParts] = useState([])
@@ -21,17 +23,19 @@ function RecordDetails() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [recordRes, usersRes, repairPartsRes, stockItemsRes] = await Promise.all([
+                const [recordRes, usersRes, repairPartsRes, stockItemsRes, agreementRes] = await Promise.all([
                     axios.get(`http://88.200.63.148:6060/api/records/${id}`),
                     axios.get('http://88.200.63.148:6060/api/records/users/list'),
                     axios.get(`http://88.200.63.148:6060/api/repairparts/${id}/parts`),
-                    axios.get('http://88.200.63.148:6060/api/inventory')
+                    axios.get('http://88.200.63.148:6060/api/inventory'),
+                    axios.get(`http://88.200.63.148:6060/api/agreement/${id}`)
                 ])
                 setRecord(recordRes.data)
                 setFormData(recordRes.data)
                 setUsers(usersRes.data)
                 setRepairParts(repairPartsRes.data)
                 setStockItems(stockItemsRes.data)
+                setAgreement(agreementRes.data)
             } catch (error) {
                 console.error("Error fetching data:", error)
             }
@@ -47,6 +51,17 @@ function RecordDetails() {
         }))
     }
 
+    const handleDownloadAgreement = async () => {
+        try {
+            const response = await axios.get(`http://88.200.63.148:6060/api/agreement/${id}/download`, {
+                responseType: 'blob',
+            })
+            saveAs(response.data, `RepairAgreement_${id}.pdf`)
+        } catch (err) {
+            alert('Failed to download agreement PDF.')
+        }
+    }
+
     const handleAddPart = async (e) =>{
         e.preventDefault()
 
@@ -55,11 +70,6 @@ function RecordDetails() {
             return
         }
 
-        // debug why part is nt added ot the list of added parts?????
-        // console.log('Attempting to add part:', {
-        // recordId: id,
-        // part_id: selectedPart,
-        // quantity_used: quantityUsed
 
         try{
             await axios.post(`http://88.200.63.148:6060/api/repairparts/${id}/parts`,{
@@ -282,6 +292,21 @@ function RecordDetails() {
                         )}
                     </tbody>
                 </table>
+            </div>
+
+            <div className="mt-5">
+                <h3>Repair Agreement</h3>
+                {agreement ? (
+                    <div className="card">
+                        <div className="card-body">
+                            <div className="p-3 bg-light border rounded mb-3" style={{ whiteSpace: 'pre-wrap' }}>{agreement.agreement_text}</div>
+                            <p><strong>Status:</strong> {agreement.is_signed ? <span className="badge bg-success ms-2">Signed</span> : <span className="badge bg-warning ms-2">Not Signed</span>}</p>
+                            <button className="btn btn-outline-primary" onClick={handleDownloadAgreement}>Download as PDF</button>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="alert alert-info">No repair agreement found for this record.</div>
+                )}
             </div>
 
         </div>
