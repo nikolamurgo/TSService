@@ -1,5 +1,8 @@
 const express = require('express')
 const cors = require('cors')
+const path = require('path')
+const history = require('connect-history-api-fallback')
+
 const app = express()
 const recordRoutes = require('./routes/recordRoutes')
 const authRoutes = require('./routes/auth')
@@ -20,6 +23,10 @@ const db = require('./db/connection')
 app.use(cors());
 app.use(express.json())
 
+app.use(history());
+
+app.use(express.static(path.join(__dirname, 'build')));
+
 // Routes
 app.use('/api/records', recordRoutes)
 app.use('/api/auth', authRoutes)
@@ -27,13 +34,13 @@ app.use('/api/account', accountRoutes)
 app.use('/api/inventory', inventoryRoutes)
 app.use('/api/customers', customersRoutes)
 app.use('/api/users', usersRoutes)
-app.use('/api/repairparts', repairPartRoutes)
+app.use('/api/repair-parts', repairPartRoutes)
 app.use('/api/productivity', productivityRoutes)
 app.use('/api/agreement', agreementRoutes)
 
-app.get('/', (req, res) => {
-  res.send('Backend is running')
-})
+// app.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'build', 'index.html'));
+// })
 
 
 app.listen(PORT, () => {

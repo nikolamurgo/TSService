@@ -26,7 +26,7 @@ function RecordDetails() {
                 const [recordRes, usersRes, repairPartsRes, stockItemsRes, agreementRes] = await Promise.all([
                     axios.get(`http://88.200.63.148:6060/api/records/${id}`),
                     axios.get('http://88.200.63.148:6060/api/records/users/list'),
-                    axios.get(`http://88.200.63.148:6060/api/repairparts/${id}/parts`),
+                    axios.get(`http://88.200.63.148:6060/api/repair-parts/${id}/parts`),
                     axios.get('http://88.200.63.148:6060/api/inventory'),
                     axios.get(`http://88.200.63.148:6060/api/agreement/${id}`)
                 ])
@@ -72,14 +72,14 @@ function RecordDetails() {
 
 
         try{
-            await axios.post(`http://88.200.63.148:6060/api/repairparts/${id}/parts`,{
+            await axios.post(`http://88.200.63.148:6060/api/repair-parts/${id}/parts`,{
                 part_id: selectedPart,
                 quantity_used: quantityUsed,
             })
             
             // Refetch data on success
             const [repairPartsRes, stockItemsRes] = await Promise.all([
-                axios.get(`http://88.200.63.148:6060/api/repairparts/${id}/parts`),
+                axios.get(`http://88.200.63.148:6060/api/repair-parts/${id}/parts`),
                 axios.get('http://88.200.63.148:6060/api/inventory')
             ]);
             setRepairParts(repairPartsRes.data)
