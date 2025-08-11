@@ -9,7 +9,7 @@ function Layout() {
                 <Outlet />
             </div>
         </div>
-    );
+    )
 }
 
 export default Layout;
