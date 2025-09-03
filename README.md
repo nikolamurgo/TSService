@@ -2,9 +2,6 @@
 
 This project is an **information system** for managing a mobile phone service shop.  
 It provides features for admins and technicians to manage repair workflows.
-
-**Accesible at:** http://88.200.63.148:6060
-**Testing Account:** username=Janez, password=Janez123
   
 ---
 
